@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ale Son](https://up.htmlacademy.ru/javascript/14/user/237817).
-* Наставник: `Неизвестно`.
+* Наставник: [Артем Черкасов] (https://htmlacademy.ru/profile/id530727).
 
 ---
 
