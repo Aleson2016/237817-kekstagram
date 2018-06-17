@@ -43,14 +43,10 @@ var rand = function (elements) {
   return element;
 };
 
-//Не срабатывает ulrNumbers[i], потому что не строка? в строку преобразовать не получается (пыталась через String(), toString() и кавычки с плюсом)
-
-//Не знаю, как сгенерировать комментарий из 1 или 2 пердложений.
-
 var pictures = [];
 for (var i = 0; i < PICTURE_COUNT; i++) {
   pictures.push({
-    url: urlNumbers[i],
+    url: 'photos/' + urlNumbers[i] + '.jpg',
     likes: PICTURE_LIKES,
     comments: rand(PICTURE_COMMENTS),
     description: rand(PICTURE_DESCRIPTIONS)
@@ -98,7 +94,7 @@ var renderComment = function (post) {
   commentElement.classList.add('social__comment--text');
 
   var commentImage = makeItem('img', 'social__picture');
-  commentImage.src = 'img/avatar + getNumber(1, 6) + .svg';
+  commentImage.src = 'img/avatar-' + getNumber(1, 6) + '.svg';
   commentImage.alt = 'Аватар комментатора фотографии';
   commentImage.width = COMMENT_IMAGE_WIDTH;
   commentImage.height = COMMENT_IMAGE_WIDTH;
