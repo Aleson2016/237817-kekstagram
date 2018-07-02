@@ -165,7 +165,7 @@ var imgSetup = document.querySelector('.img-upload__overlay');
 var imgSetupCancel = imgSetup.querySelector('#upload-cancel');
 
 var onImgSetupEscPress = function (evt) {
-  if(evt.keyCode === KEYCODE_ESC) {
+  if(evt.keyCode === KEYCODE_ESC && evt.target!== hashtags && evt.target !== commentText) {
     closeImgSetup();
   }
 };
@@ -357,4 +357,71 @@ effectSetup.addEventListener('change', function (evt) {
       imgPreview.classList.remove(effects[effectRadio[i].id]);
     }
   }
+});
+
+// хэш-теги, форма
+var hashtags = imgSetup.querySelector('.text__hashtags');
+var commentText = imgSetup.querySelector('.text__description');
+var imgSetupForm = document.querySelector('.img-upload__form');
+
+hashtags.addEventListener('input', function (evt){
+  var hashtagList = hashtags.value;
+  var hashtagItems = hashtagList.split(' ');
+  for (var i = 0; i < hashtagItems.length; i++) {
+    if (hashtagItems[i].search(/#+$/) !== -1) {
+      hashtags.setCustomValidity('Хэш-тег должен состоять минимум из двух символов');
+      hashtags.style.borderColor = 'red';
+    } else if (hashtagItems[i].search(/^#/) === -1 || hashtagItems[i].search(/#(?=[A-Za-zА-Яа-яЁё]+)/) === -1) {
+      hashtags.setCustomValidity('Хэш-тег должен начинаться с #');
+      hashtags.style.borderColor = 'red';
+    } else if (hashtagItems[i].search(/#([A-Za-zА-Яа-яЁё]{20,})\s?/) !== -1) {
+      hashtags.setCustomValidity('Один хэш-тег должен содержать не более 20 символов');
+      hashtags.style.borderColor = 'red';
+    }  else if (hashtagList.search(/(#([A-Za-zА-Яа-яЁё]{1,19}))(?=(#([A-Za-zА-Яа-яЁё]{1,19})))/) !== -1){
+      hashtags.setCustomValidity('Хэш-теги разделяются пробелами');
+      hashtags.style.borderColor = 'red';
+    } else if (hashtagList.search(/(#([A-Za-zА-Яа-яЁё]{1,19})\s?){6,}/) !== -1) {
+      hashtags.setCustomValidity('Не более пяти хэш-тегов');
+      hashtags.style.borderColor = 'red';
+    }
+    // else if (hashtagItems.indexOf(hashtagItems[i]) !== -1) {
+    //   hashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+    //   hashtags.style.borderColor = 'red';
+    // }
+    else {
+      hashtags.setCustomValidity('');
+      hashtags.style.borderColor = '';
+    }
+  };
+});
+
+var validateForm = function () {
+  var hashtagList = hashtags.value;
+  var hashtagItems = hashtagList.split(' ');
+  for (var i = 0; i < hashtagItems.length; i++) {
+    if (hashtagItems[i].search(/#([A-Za-zА-Яа-яЁё]{0})/) !== -1) {
+      return false;
+    } else if (hashtagItems[i].search(/^#/) === -1 || hashtagItems[i].search(/#(?=[A-Za-zА-Яа-яЁё]+)/) === -1) {
+      return false;
+    } else if (hashtagItems[i].search(/#([A-Za-zА-Яа-яЁё]{20,})\s?/) !== -1) {
+      return false;
+    }  else if (hashtagList.search(/(#([A-Za-zА-Яа-яЁё]{1,19}))(?=(#([A-Za-zА-Яа-яЁё]{1,19})))/) !== -1){
+      return false;
+    } else if (hashtagList.search(/(#([A-Za-zА-Яа-яЁё]{1,19})\s?){6,}/) !== -1) {
+      return false;
+    }
+    // else if (hashtagItems.indexOf(hashtagItems[i]) !== -1) {
+    //   return false;
+    // }
+    else  {
+      return true;
+    }
+  };
+};
+
+imgSetupForm.addEventListener('submit', function (evt) {
+ var validated = validateForm();
+ if (validated == false) {
+   evt.preventDefault();
+ }
 });
