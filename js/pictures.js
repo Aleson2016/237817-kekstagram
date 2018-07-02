@@ -366,7 +366,9 @@ var imgSetupForm = document.querySelector('.img-upload__form');
 
 hashtags.addEventListener('input', function (evt){
   var hashtagList = hashtags.value;
-  var hashtagItems = hashtagList.split(' ');
+  var hashtagLowerCase = hashtagList.toLowerCase();
+  var hashtagItems = hashtagLowerCase.split(' ');
+
   for (var i = 0; i < hashtagItems.length; i++) {
     if (hashtagItems[i].search(/#+$/) !== -1) {
       hashtags.setCustomValidity('Хэш-тег должен состоять минимум из двух символов');
@@ -383,12 +385,10 @@ hashtags.addEventListener('input', function (evt){
     } else if (hashtagList.search(/(#([A-Za-zА-Яа-яЁё]{1,19})\s?){6,}/) !== -1) {
       hashtags.setCustomValidity('Не более пяти хэш-тегов');
       hashtags.style.borderColor = 'red';
-    }
-    // else if (hashtagItems.indexOf(hashtagItems[i]) !== -1) {
-    //   hashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
-    //   hashtags.style.borderColor = 'red';
-    // }
-    else {
+    } else if (hashtagItems.indexOf(hashtagItems[i]) !== i) {
+      hashtags.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+      hashtags.style.borderColor = 'red';
+    } else {
       hashtags.setCustomValidity('');
       hashtags.style.borderColor = '';
     }
@@ -397,7 +397,9 @@ hashtags.addEventListener('input', function (evt){
 
 var validateForm = function () {
   var hashtagList = hashtags.value;
-  var hashtagItems = hashtagList.split(' ');
+  var hashtagLowerCase = hashtagList.toLowerCase();
+  var hashtagItems = hashtagLowerCase.split(' ');
+
   for (var i = 0; i < hashtagItems.length; i++) {
     if (hashtagItems[i].search(/#([A-Za-zА-Яа-яЁё]{0})/) !== -1) {
       return false;
@@ -409,11 +411,9 @@ var validateForm = function () {
       return false;
     } else if (hashtagList.search(/(#([A-Za-zА-Яа-яЁё]{1,19})\s?){6,}/) !== -1) {
       return false;
-    }
-    // else if (hashtagItems.indexOf(hashtagItems[i]) !== -1) {
-    //   return false;
-    // }
-    else  {
+    } else if (hashtagItems.indexOf(hashtagItems[i]) !== i) {
+      return false;
+    } else  {
       return true;
     }
   };
