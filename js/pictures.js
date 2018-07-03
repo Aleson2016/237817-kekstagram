@@ -246,6 +246,7 @@ plusResize.addEventListener('click', function () {
 // Эффекты
 var effectSetup = imgSetup.querySelector('.img-upload__effects');
 var effectRadio = imgSetup.querySelectorAll('.effects__radio');
+
 var effects = {
   // "effect-none": '',
   'effect-chrome': 'effects__preview--chrome',
@@ -259,15 +260,6 @@ var scalePin = imgScale.querySelector('.scale__pin');
 var scaleLine = imgScale.querySelector('.scale__line');
 var scaleLevel = imgScale.querySelector('.scale__level');
 var scaleValue = imgScale.querySelector('.scale__value');
-
-// var effectsScaleDefault = {
-//   'effect-none': '',
-//   'effect-chrome': 'grayscale(1)',
-//   'effect-sepia': 'sepia(1)',
-//   'effect-marvin': 'invert(100%)',
-//   'effect-phobos': 'blur(3px)',
-//   'effect-heat': 'brightness(3)'
-// };
 
 var useScale = function (scaleNumber) {
   var effectsScale = {
