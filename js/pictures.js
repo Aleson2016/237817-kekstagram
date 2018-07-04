@@ -293,7 +293,7 @@ var showScale = function () {
 };
 
 // слайдер
-scalePin.addEventListener('mousedown', function (evt) {
+imgScale.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
   var startCoords = {
@@ -301,11 +301,15 @@ scalePin.addEventListener('mousedown', function (evt) {
     y: evt.clientY
   };
 
+  var isDragged = false;
+
   var onMouseMove = function (moveEvt) {
     moveEvt.preventDefault();
 
+    isDragged = true;
+
     var shift = {
-      x: startCoords.x - moveEvt.clientX,
+      x: moveEvt.clientX - startCoords.x,
       y: evt.clientY
     };
 
@@ -314,13 +318,13 @@ scalePin.addEventListener('mousedown', function (evt) {
       y: evt.clientY
     };
 
-    var minX = scaleLine.offsetLeft - scalePin.offsetWidth;
-    var maxX = scaleLine.offsetLeft + scaleLine.offsetWidth - scalePin.offsetWidth;
-    var currentX = scalePin.offsetLeft - shift.x;
+    var minX = scaleLine.offsetLeft - scalePin.offsetWidth / 2;
+    var maxX = scaleLine.offsetLeft + scaleLine.offsetWidth - scalePin.offsetWidth / 2;
+    var currentX = scalePin.offsetLeft + scalePin.offsetWidth / 2 + shift.x;
 
     if (currentX >= minX && currentX <= maxX) {
-      scalePin.style.left = (currentX + 'px');
-      scaleLevel.style.width = (scaleLevel.offsetWidth - shift.x + 'px');
+      scalePin.style.left = (currentX - scalePin.offsetWidth / 2 + 'px');
+      scaleLevel.style.width = (scaleLevel.offsetWidth + shift.x + 'px');
     }
 
     var effectValue = Math.floor((scaleLevel.offsetWidth / scaleLine.offsetWidth) * 100);
@@ -332,6 +336,34 @@ scalePin.addEventListener('mousedown', function (evt) {
 
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
+
+    if (isDragged === false) {
+      startCoords = {
+        x: scalePin.offsetLeft + scalePin.offsetWidth / 2,
+        y: evt.clientY
+      };
+
+      var shift = {
+        x: startCoords.x - evt.offsetX,
+        y: evt.clientY
+      };
+
+      var minX = scaleLine.offsetLeft - scalePin.offsetWidth / 2;
+      var maxX = scaleLine.offsetLeft + scaleLine.offsetWidth - scalePin.offsetWidth / 2;
+      var currentX = evt.offsetX - scalePin.offsetWidth / 2;
+
+      if (currentX >= minX && currentX <= maxX) {
+        scalePin.style.left = currentX + 'px';
+        scaleLevel.style.width = (scaleLevel.offsetWidth - shift.x + 'px');
+      }
+
+      var effectValue = Math.floor((scaleLevel.offsetWidth / scaleLine.offsetWidth) * 100);
+
+      useScale(effectValue);
+
+      scaleValue.value = '' + effectValue;
+    }
+
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
   };
