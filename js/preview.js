@@ -59,8 +59,11 @@
     var commentLoadmore = document.querySelector('.social__loadmore');
     var commentLoadCount = 1;
     commentLoadmore.addEventListener('click', function () {
+      commentList.appendChild(loadComments(commentLoadCount));
+      commentLoadCount = commentLoadCount + 1;
+
       var lastCount = Math.floor(picture.comments.length / 5);
-      if ((commentLoadCount % 5) !== 0 && commentLoadCount >= lastCount) {
+      if ((commentLoadCount % 5) !== 0 && commentLoadCount > lastCount) {
         var fragment = document.createDocumentFragment();
         for (var i = COMMENT_COUNT_MAX * lastCount; i < picture.comments.length; i++) {
           fragment.appendChild(renderComment(picture.comments[i]));
@@ -68,8 +71,6 @@
         commentList.appendChild(fragment);
         commentLoadmore.classList.add('hidden');
       }
-      commentList.appendChild(loadComments(commentLoadCount));
-      commentLoadCount = commentLoadCount + 1;
     });
 
     bigPicture.querySelector('.social__caption').textContent = picture.description;
