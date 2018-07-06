@@ -53,8 +53,17 @@
     };
 
     var commentList = bigPicture.querySelector('.social__comments');
-    commentList.innerHTML = '';
-    commentList.appendChild(loadComments(0));
+    if (picture.commens.length <= COMMENT_COUNT_MAX) {
+      var fragment = document.createDocumentFragment();
+      for (var i = 0; i < picture.commens.length; i++) {
+        fragment.appendChild(renderComment(picture.comments[i]));
+      }
+      commentList.innerHTML = '';
+      commentList.appendChild(fragment);
+    } else {
+      commentList.innerHTML = '';
+      commentList.appendChild(loadComments(0));
+    }
 
     var commentLoadmore = document.querySelector('.social__loadmore');
     var commentLoadCount = 1;
