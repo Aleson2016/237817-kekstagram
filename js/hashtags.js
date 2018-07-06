@@ -6,6 +6,7 @@
     commentText: document.querySelector('.text__description')
   };
   var imgSetupForm = document.querySelector('.img-upload__form');
+  var imgSetup = document.querySelector('.img-upload__overlay');
   var HASHTAG_MAX = 5;
   var HASHTAG_MAX_LENGTH = 20;
   var HASHTAG_MIN_LENGTH = 2;
@@ -66,5 +67,9 @@
     if (validated !== true) {
       evt.preventDefault();
     }
+    window.backend.upload(new FormData(imgSetupForm), function (response) {
+      imgSetup.classList.add('hidden');
+    }, window.backend.errorHandler);
+    evt.preventDefault();
   });
 })();

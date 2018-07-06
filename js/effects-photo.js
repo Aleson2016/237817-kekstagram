@@ -26,6 +26,24 @@
   };
 
   uploadFile.addEventListener('change', function () {
+    var previewPhoto = imgSetup.querySelector('img');
+    var file = uploadFile.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function () {
+      var dataURL = reader.result;
+      previewPhoto.src = dataURL;
+    };
+
+    reader.readAsDataURL(file);
+
+    // if (file) {
+    //   reader.readAsDataURL(file);
+    // } else {
+    //   var messageError = document.querySelector('.img-upload__message--error');
+    //   messageError.classList.remove('hidden');
+    // }
+
     openImgSetup();
     for (var i = 0; i < effectRadio.length; i++) {
       if (effectRadio[i].checked) {

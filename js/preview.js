@@ -2,6 +2,7 @@
 
 (function () {
   var COMMENT_IMAGE_WIDTH = '35';
+  var COMMENT_COUNT_MAX = 5;
 
   var bigPicture = document.querySelector('.big-picture');
 
@@ -43,22 +44,38 @@
     bigPicture.querySelector('.likes-count').textContent = picture.likes;
     bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
 
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < picture.comments.length; i++) {
-      fragment.appendChild(renderComment(picture.comments[i]));
-    }
+    var loadComments = function (a) {
+      var fragment = document.createDocumentFragment();
+      for (var i = COMMENT_COUNT_MAX * a; i < COMMENT_COUNT_MAX * (a + 1); i++) {
+        fragment.appendChild(renderComment(picture.comments[i]));
+      }
+      return fragment;
+    };
 
     var commentList = bigPicture.querySelector('.social__comments');
     commentList.innerHTML = '';
-    commentList.appendChild(fragment);
+    commentList.appendChild(loadComments(0));
+
+    var commentLoadmore = document.querySelector('.social__loadmore');
+    var commentLoadCount = 1;
+    commentLoadmore.addEventListener('click', function () {
+      var lastCount = Math.floor(picture.comments.length / 5);
+      if ((commentLoadCount % 5) !== 0 && commentLoadCount >= lastCount) {
+        var fragment = document.createDocumentFragment();
+        for (var i = COMMENT_COUNT_MAX * lastCount; i < picture.comments.length; i++) {
+          fragment.appendChild(renderComment(picture.comments[i]));
+        }
+        commentList.appendChild(fragment);
+        commentLoadmore.classList.add('hidden');
+      }
+      commentList.appendChild(loadComments(commentLoadCount));
+      commentLoadCount = commentLoadCount + 1;
+    });
 
     bigPicture.querySelector('.social__caption').textContent = picture.description;
 
     var commentCount = document.querySelector('.social__comment-count');
     commentCount.classList.add('visually-hidden');
-
-    var commentLoadmore = document.querySelector('.social__loadmore');
-    commentLoadmore.classList.add('visually-hidden');
   };
 
   var closeBigPicture = function () {

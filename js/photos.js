@@ -2,6 +2,7 @@
 
 (function () {
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
+  var bigPicture = document.querySelector('.big-picture');
 
   var createPicture = function (picture) {
     var pictureItem = pictureTemplate.cloneNode(true);
@@ -11,19 +12,29 @@
     return pictureItem;
   };
 
-  var showPhoto = function (picture) {
-    photo.addEventListener('click', function () {
-      window.preview(picture);
-    });
+  var successHandler = function (pictures) {
+    var fragment = document.createDocumentFragment();
+
+    var showPhoto = function (picture) {
+      photo.addEventListener('click', function () {
+        window.preview(picture);
+      });
+      document.addEventListener('keydown', function (evt) {
+        if (evt.keyCode === 27) {
+          bigPicture.classList.add('hidden');
+        }
+      });
+    };
+
+    for (var i = 0; i < pictures.length; i++) {
+      var photo = createPicture(pictures[i]);
+      fragment.appendChild(photo);
+      showPhoto(pictures[i]);
+    }
+
+    var pictureList = document.querySelector('.pictures');
+    pictureList.appendChild(fragment);
   };
 
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < window.data.length; i++) {
-    var photo = createPicture(window.data[i]);
-    fragment.appendChild(photo);
-    showPhoto(window.data[i]);
-  }
-
-  var pictureList = document.querySelector('.pictures');
-  pictureList.appendChild(fragment);
+  window.backend.download(successHandler, window.backend.errorHandler);
 })();
