@@ -40,8 +40,8 @@
       xhr.send();
     },
 
-    errorHandler: function (message) {
-      console.error(message);
+    errorHandler: function () {
+
     }
   };
 })();

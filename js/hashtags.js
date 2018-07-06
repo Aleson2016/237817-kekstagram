@@ -67,7 +67,7 @@
     if (validated !== true) {
       evt.preventDefault();
     }
-    window.backend.upload(new FormData(imgSetupForm), function (response) {
+    window.backend.upload(new FormData(imgSetupForm), function () {
       imgSetup.classList.add('hidden');
     }, window.backend.errorHandler);
     evt.preventDefault();
