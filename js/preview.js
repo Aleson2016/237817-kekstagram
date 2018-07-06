@@ -73,11 +73,11 @@
 
       var lastCount = Math.floor(picture.comments.length / 5);
       if ((commentLoadCount % 5) !== 0 && commentLoadCount > lastCount) {
-        var fragment = document.createDocumentFragment();
-        for (var i = COMMENT_COUNT_MAX * lastCount; i < picture.comments.length; i++) {
-          fragment.appendChild(renderComment(picture.comments[i]));
+        var frag = document.createDocumentFragment();
+        for (var j = COMMENT_COUNT_MAX * lastCount; j < picture.comments.length; j++) {
+          frag.appendChild(renderComment(picture.comments[j]));
         }
-        commentList.appendChild(fragment);
+        commentList.appendChild(frag);
         commentLoadmore.classList.add('hidden');
       }
     });
