@@ -1,12 +1,6 @@
 'use strict';
 
 (function () {
-  window.hashtags = {
-    hashtag: document.querySelector('.text__hashtags'),
-    commentText: document.querySelector('.text__description')
-  };
-  var imgSetupForm = document.querySelector('.img-upload__form');
-  var imgSetup = document.querySelector('.img-upload__overlay');
   var HASHTAG_MAX = 5;
   var HASHTAG_MAX_LENGTH = 20;
   var HASHTAG_MIN_LENGTH = 2;
@@ -21,9 +15,9 @@
   };
 
   var validateForm = function () {
-    var hashtagList = window.hashtags.hashtag.value;
-    var hashtagLowerCase = hashtagList.toLowerCase();
-    var hashtagItems = hashtagLowerCase.split(' ');
+    var userHashtags = hashtags.hashtag.value;
+    var hashtagsLowerCase = userHashtags.toLowerCase();
+    var hashtagItems = hashtagsLowerCase.split(' ');
 
     if (hashtagItems.length > HASHTAG_MAX) {
       return HASHTAG_ERRORS.MAX_COUNT;
@@ -50,15 +44,37 @@
     return true;
   };
 
-  window.hashtags.hashtag.addEventListener('input', function () {
+  var successHandler = function () {
+    window.effects.imgSetup.classList.add('hidden');
+  };
+
+  var errorHandler = function () {
+    window.effects.imgSetup.classList.add('hidden');
+    var messageError = errorTemplate.cloneNode(true);
+    imgSetupForm.appendChild(messageError);
+    messageError.classList.remove('hidden');
+  };
+
+  var hashtags = {
+    hashtag: document.querySelector('.text__hashtags'),
+    commentText: document.querySelector('.text__description')
+  };
+
+  window.hashtags = hashtags;
+
+  var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+
+  var imgSetupForm = document.querySelector('.img-upload__form');
+
+  hashtags.hashtag.addEventListener('input', function () {
     var errorMessage = validateForm();
 
     if (errorMessage !== true) {
-      window.hashtags.hashtag.setCustomValidity(errorMessage);
-      window.hashtags.hashtag.style.borderColor = 'red';
+      hashtags.hashtag.setCustomValidity(errorMessage);
+      hashtags.hashtag.style.borderColor = 'red';
     } else {
-      window.hashtags.hashtag.setCustomValidity('');
-      window.hashtags.hashtag.style.borderColor = '';
+      hashtags.hashtag.setCustomValidity('');
+      hashtags.hashtag.style.borderColor = '';
     }
   });
 
@@ -67,9 +83,8 @@
     if (validated !== true) {
       evt.preventDefault();
     }
-    window.backend.upload(new FormData(imgSetupForm), function () {
-      imgSetup.classList.add('hidden');
-    }, window.backend.errorHandler);
+    window.backend.upload(new FormData(imgSetupForm), successHandler, errorHandler);
     evt.preventDefault();
+
   });
 })();
