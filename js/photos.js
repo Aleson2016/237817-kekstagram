@@ -15,8 +15,8 @@
       window.preview(picture);
     });
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 27) {
-        bigPicture.classList.add('hidden');
+      if (evt.keyCode === photos.KEYCODE_ESC) {
+        photos.bigPicture.classList.add('hidden');
       }
     });
   };
@@ -27,11 +27,8 @@
 
   var showRandom = function () {
     var randomPictures = [];
-    var getNumber = function (min, max) {
-      return (Math.floor(Math.random() * (max - min + 1)) + min);
-    };
     while (randomPictures.length < 10) {
-      var index = getNumber(0, pictures.length - 1);
+      var index = photos.getNumber(0, pictures.length - 1);
       if (randomPictures.indexOf(pictures[index]) === -1) {
         randomPictures.push(pictures[index]);
       }
@@ -51,12 +48,12 @@
     pics.forEach(function (pic) {
       var photo = createPicture(pic);
       showPhoto(pic, photo);
-      pictureList.appendChild(photo);
+      userPictures.appendChild(photo);
     });
   };
 
   var removePictures = function () {
-    var elements = pictureList.querySelectorAll('.picture__link');
+    var elements = userPictures.querySelectorAll('.picture__link');
     elements.forEach(function (element) {
       element.remove();
     });
@@ -93,13 +90,24 @@
     });
   };
 
+  var photos = {
+    KEYCODE_ESC: 27,
+    bigPicture: document.querySelector('.big-picture'),
+    getNumber: function (min, max) {
+      return (Math.floor(Math.random() * (max - min + 1)) + min);
+    }
+  };
+
+  window.photos = photos;
+
   var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
-  var bigPicture = document.querySelector('.big-picture');
+  var userPictures = document.querySelector('.pictures');
+
   var filterPopular = document.querySelector('#filter-popular');
   var filterNew = document.querySelector('#filter-new');
   var filterDiscussed = document.querySelector('#filter-discussed');
   var imgFilter = document.querySelector('.img-filters');
-  var pictureList = document.querySelector('.pictures');
+
   var filterButtons = imgFilter.querySelectorAll('.img-filters__button');
   var pictures = [];
 
