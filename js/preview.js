@@ -82,4 +82,10 @@
   var loadCommentsCount = 0;
 
   bigPictureCancel.addEventListener('click', closeBigPicture);
+
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === window.photos.KEYCODE_ESC) {
+      closeBigPicture();
+    }
+  });
 })();

@@ -14,11 +14,6 @@
     photo.addEventListener('click', function () {
       window.preview(picture);
     });
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === photos.KEYCODE_ESC) {
-        photos.bigPicture.classList.add('hidden');
-      }
-    });
   };
 
   var showPopular = function () {
@@ -73,6 +68,17 @@
 
     imgFilter.classList.remove('img-filters--inactive');
 
+    // filtersForm.addEventListener('click', function (evt) {
+    //   for (var i = 0; i < filterButtons.length; i++) {
+    //     if (filterButtons[i] === evt.target) {
+    //       activateButton(filterButtons[i]);
+    //       removePictures();
+    //
+    //     }
+    //   }
+    // })
+
+
     filterPopular.addEventListener('click', function () {
       activateButton(filterPopular);
       removePictures();
@@ -107,9 +113,16 @@
   var filterNew = document.querySelector('#filter-new');
   var filterDiscussed = document.querySelector('#filter-discussed');
   var imgFilter = document.querySelector('.img-filters');
+  var filtersForm = document.querySelector('.img-filters__form');
 
   var filterButtons = imgFilter.querySelectorAll('.img-filters__button');
   var pictures = [];
 
-  window.backend.download(successHandler, window.backend.errorHandler);
+  window.backend.download(successHandler, function (status, statusText) {
+    if (status === 0) {
+      window.backend.onError('Произошла ошибка соединения');
+    } else {
+      window.backend.onError('Cтатус ответа: ' + status + ' ' + statusText);
+    }
+  });
 })();
