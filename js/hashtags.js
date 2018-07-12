@@ -5,7 +5,7 @@
   var HASHTAG_MAX_LENGTH = 20;
   var HASHTAG_MIN_LENGTH = 2;
 
-  var HASHTAG_ERRORS = {
+  var HashtagErrors = {
     MIN_LENGTH: 'Хэш-тег должен состоять минимум из двух символов',
     HASHTAG_START: 'Хэш-тег должен начинаться с #',
     MAX_LENGTH: 'Один хэш-тег должен содержать не более 20 символов',
@@ -16,39 +16,44 @@
 
   var validateForm = function () {
     var userHashtags = hashtags.hashtag.value;
+
+    if (userHashtags === '') {
+      return undefined;
+    }
+
     var hashtagsLowerCase = userHashtags.toLowerCase();
     var hashtagItems = hashtagsLowerCase.split(' ');
 
     if (hashtagItems.length > HASHTAG_MAX) {
-      return HASHTAG_ERRORS.MAX_COUNT;
+      return HashtagErrors.MAX_COUNT;
     }
 
     for (var i = 0; i < hashtagItems.length; i++) {
       if (hashtagItems[i].length < HASHTAG_MIN_LENGTH) {
-        return HASHTAG_ERRORS.MIN_LENGTH;
+        return HashtagErrors.MIN_LENGTH;
       }
       if (hashtagItems[i][0] !== '#') {
-        return HASHTAG_ERRORS.HASHTAG_START;
+        return HashtagErrors.HASHTAG_START;
       }
       if (hashtagItems[i].length > HASHTAG_MAX_LENGTH) {
-        return HASHTAG_ERRORS.MAX_LENGTH;
+        return HashtagErrors.MAX_LENGTH;
       }
       var hashtagLetters = hashtagItems[i].split('#');
       if (hashtagLetters.length > 2) {
-        return HASHTAG_ERRORS.HASHTAG_SPACE;
+        return HashtagErrors.HASHTAG_SPACE;
       }
       if (hashtagItems.indexOf(hashtagItems[i]) !== i) {
-        return HASHTAG_ERRORS.HASHTAG_REPEAT;
+        return HashtagErrors.HASHTAG_REPEAT;
       }
     }
-    return true;
+    return undefined;
   };
 
-  var successHandler = function () {
+  var onSuccess = function () {
     window.effects.imgSetup.classList.add('hidden');
   };
 
-  var errorHandler = function () {
+  var onError = function () {
     window.effects.imgSetup.classList.add('hidden');
     var messageError = errorTemplate.cloneNode(true);
     imgSetupForm.appendChild(messageError);
@@ -69,7 +74,7 @@
   hashtags.hashtag.addEventListener('input', function () {
     var errorMessage = validateForm();
 
-    if (errorMessage !== true) {
+    if (errorMessage) {
       hashtags.hashtag.setCustomValidity(errorMessage);
       hashtags.hashtag.style.borderColor = 'red';
     } else {
@@ -79,12 +84,10 @@
   });
 
   imgSetupForm.addEventListener('submit', function (evt) {
-    var validated = validateForm();
-    if (validated !== true) {
-      evt.preventDefault();
-    }
-    window.backend.upload(new FormData(imgSetupForm), successHandler, errorHandler);
     evt.preventDefault();
-
+    var errorMessage = validateForm();
+    if (!errorMessage) {
+      window.backend.upload(new FormData(imgSetupForm), onSuccess, onError);
+    }
   });
 })();

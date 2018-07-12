@@ -20,34 +20,38 @@
   };
 
   var useEffect = function () {
-    for (var i = 0; i < effectRadios.length; i++) {
-      if (effectRadios[i].checked) {
-        effects.imgUpload.classList.add(effectsType[effectRadios[i].id]);
-      }
+    var checkedEffect = Array.from(effectRadios).find(function (effectRadio) {
+      return effectRadio.checked;
+    });
+    if (checkedEffect.id === 'effect-none') {
+      hideScale();
+    } else {
+      showScale();
+      effects.imgUpload.classList.add(EffectsType[checkedEffect.id]);
     }
   };
 
   var removeEffect = function (radios) {
     Array.from(radios).map(function (radio) {
-      effects.imgUpload.classList.remove(effectsType[radio.id]);
+      effects.imgUpload.classList.remove(EffectsType[radio.id]);
     });
   };
 
   var useScale = function (scaleNumber) {
-    var effectsScale = {
+    var EffectsScale = {
       'effect-none': '',
       'effect-chrome': 'grayscale(' + scaleNumber / 100 + ')',
       'effect-sepia': 'sepia(' + scaleNumber / 100 + ')',
       'effect-marvin': 'invert(' + scaleNumber + '%)',
       'effect-phobos': 'blur(' + scaleNumber * 0.03 + 'px)',
-      'effect-heat': 'brightness(' + scaleNumber * 0.03 + ')'
+      'effect-heat': 'brightness(' + (1 + scaleNumber * 0.02) + ')'
     };
 
-    for (var i = 0; i < effectRadios.length; i++) {
-      if (effectRadios[i].checked) {
-        effects.imgUpload.style.filter = effectsScale[effectRadios[i].id];
+    effectRadios.forEach(function (effectRadio) {
+      if (effectRadio.checked) {
+        effects.imgUpload.style.filter = EffectsScale[effectRadio.id];
       }
-    }
+    });
   };
 
   var getDefaultScale = function () {
@@ -55,7 +59,6 @@
     scaleLevel.style.width = (scaleLine.offsetWidth + 'px');
     var effectValue = effects.MAX_VALUE;
     useScale(effectValue);
-    scaleValue.value = '' + effectValue;
   };
 
   var hideScale = function () {
@@ -78,13 +81,13 @@
     var effectValue = Math.floor((scaleLevel.offsetWidth / scaleLine.offsetWidth) * 100);
     useScale(effectValue);
 
-    scaleValue.value = '' + effectValue;
+    scaleValue.value = effectValue;
   };
 
   var effects = {
     MAX_VALUE: 100,
     imgUpload: document.querySelector('.img-upload__preview'),
-    imgSetup: document.querySelector('.img-upload__overlay')
+    imgSetup: document.querySelector('.img-upload__overlay'),
   };
 
   window.effects = effects;
@@ -92,8 +95,7 @@
   var imgSetupCancel = effects.imgSetup.querySelector('#upload-cancel');
   var effectSetup = effects.imgSetup.querySelector('.img-upload__effects');
   var effectRadios = effects.imgSetup.querySelectorAll('.effects__radio');
-  var effectsType = {
-    // "effect-none": '',
+  var EffectsType = {
     'effect-chrome': 'effects__preview--chrome',
     'effect-sepia': 'effects__preview--sepia',
     'effect-marvin': 'effects__preview--marvin',
@@ -111,13 +113,17 @@
 
   uploadFile.addEventListener('change', function () {
     var previewPhoto = effects.imgSetup.querySelector('img');
+    var previewEffects = effects.imgSetup.querySelectorAll('.effects__preview');
     var file = uploadFile.files[0];
     var reader = new FileReader();
 
-    reader.onload = function () {
+    reader.addEventListener('load', function () {
       var dataURL = reader.result;
       previewPhoto.src = dataURL;
-    };
+      previewEffects.forEach(function (previewEffect) {
+        previewEffect.style.backgroundImage = 'url(' + dataURL + ')';
+      });
+    });
 
     reader.readAsDataURL(file);
 
@@ -165,7 +171,7 @@
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
 
-      if (isDragged === false) {
+      if (!isDragged) {
         startCoords = {
           x: scalePin.offsetLeft + scalePin.offsetWidth / 2,
           y: evt.clientY
@@ -189,14 +195,9 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  effectSetup.addEventListener('change', function (evt) {
-    showScale();
+  effectSetup.addEventListener('change', function () {
     getDefaultScale();
     removeEffect(effectRadios);
-    effects.imgUpload.classList.add(effectsType[evt.target.id]);
-
-    if (evt.target.id === 'effect-none') {
-      hideScale();
-    }
+    useEffect();
   });
 })();
