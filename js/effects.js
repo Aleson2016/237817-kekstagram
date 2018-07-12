@@ -32,7 +32,7 @@
   };
 
   var removeEffect = function (radios) {
-    Array.from(radios).map(function (radio) {
+    radios.forEach(function (radio) {
       effects.imgUpload.classList.remove(EffectsType[radio.id]);
     });
   };
@@ -47,11 +47,10 @@
       'effect-heat': 'brightness(' + (1 + scaleNumber * 0.02) + ')'
     };
 
-    effectRadios.forEach(function (effectRadio) {
-      if (effectRadio.checked) {
-        effects.imgUpload.style.filter = EffectsScale[effectRadio.id];
-      }
+    var checkedEffect = Array.from(effectRadios).find(function (effectRadio) {
+      return effectRadio.checked;
     });
+    effects.imgUpload.style.filter = EffectsScale[checkedEffect.id];
   };
 
   var getDefaultScale = function () {
