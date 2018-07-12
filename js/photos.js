@@ -68,31 +68,20 @@
 
     imgFilter.classList.remove('img-filters--inactive');
 
-    // filtersForm.addEventListener('click', function (evt) {
-    //   for (var i = 0; i < filterButtons.length; i++) {
-    //     if (filterButtons[i] === evt.target) {
-    //       activateButton(filterButtons[i]);
-    //       removePictures();
-    //
-    //     }
-    //   }
-    // })
-
-
-    filterPopular.addEventListener('click', function () {
-      activateButton(filterPopular);
-      removePictures();
-      showPopular();
-    });
-    filterNew.addEventListener('click', function () {
-      activateButton(filterNew);
-      removePictures();
-      showRandom();
-    });
-    filterDiscussed.addEventListener('click', function () {
-      activateButton(filterDiscussed);
-      removePictures();
-      showDiscussed();
+    filtersForm.addEventListener('click', function (evt) {
+      for (var i = 0; i < filterButtons.length; i++) {
+        if (filterButtons[i] === evt.target) {
+          activateButton(filterButtons[i]);
+          removePictures();
+        }
+        if (evt.target === filterPopular) {
+          showPopular();
+        } else if (evt.target === filterNew) {
+          showRandom();
+        } else if (evt.target === filterDiscussed) {
+          showDiscussed();
+        }
+      }
     });
   };
 

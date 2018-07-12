@@ -50,7 +50,6 @@
   };
 
   window.preview = function (picture) {
-
     loadCommentsCount = 0;
 
     window.photos.bigPicture.classList.remove('hidden');
@@ -58,34 +57,38 @@
     window.photos.bigPicture.querySelector('.likes-count').textContent = picture.likes;
     window.photos.bigPicture.querySelector('.comments-count').textContent = picture.comments.length;
 
-    var commentList = window.photos.bigPicture.querySelector('.social__comments');
-    var commentLoadmore = document.querySelector('.social__loadmore');
-
     commentList.innerHTML = '';
     commentList.appendChild(loadComments(picture, commentLoadmore));
-
-    commentLoadmore.addEventListener('click', function () {
-      commentList.appendChild(loadComments(picture, commentLoadmore));
-    });
 
     window.photos.bigPicture.querySelector('.social__caption').textContent = picture.description;
 
     var commentCount = document.querySelector('.social__comment-count');
     commentCount.classList.add('visually-hidden');
+
+    commentLoadmore.addEventListener('click', onLoadClick);
+
+    document.addEventListener('keydown', onEscPress);
   };
 
-  var closeBigPicture = function () {
+  var onLoadClick = function () {
+    commentList.appendChild(loadComments(picture, commentLoadmore));
+  };
+
+  var onEscPress = function (evt) {
+    if (evt.keyCode === window.photos.KEYCODE_ESC) {
+      onCancelClick();
+    }
+  };
+
+  var onCancelClick = function () {
     window.photos.bigPicture.classList.add('hidden');
+    document.removeEventListener('click', onEscPress);
   };
 
+  var commentList = window.photos.bigPicture.querySelector('.social__comments');
+  var commentLoadmore = document.querySelector('.social__loadmore');
   var bigPictureCancel = window.photos.bigPicture.querySelector('#picture-cancel');
   var loadCommentsCount = 0;
 
-  bigPictureCancel.addEventListener('click', closeBigPicture);
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.photos.KEYCODE_ESC) {
-      closeBigPicture();
-    }
-  });
+  bigPictureCancel.addEventListener('click', onCancelClick);
 })();

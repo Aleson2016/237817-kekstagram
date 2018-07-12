@@ -16,6 +16,11 @@
 
   var validateForm = function () {
     var userHashtags = hashtags.hashtag.value;
+
+    if (userHashtags === '') {
+      return undefined;
+    }
+
     var hashtagsLowerCase = userHashtags.toLowerCase();
     var hashtagItems = hashtagsLowerCase.split(' ');
 

@@ -20,11 +20,15 @@
   };
 
   var useEffect = function () {
-    effectRadios.forEach(function (effectRadio) {
-      if (effectRadio.checked) {
-        effects.imgUpload.classList.add(EffectsType[effectRadio.id]);
-      }
+    var checkedEffect = Array.from(effectRadios).find(function (effectRadio) {
+      return effectRadio.checked;
     });
+    if (checkedEffect.id === 'effect-none') {
+      hideScale();
+    } else {
+      showScale();
+      effects.imgUpload.classList.add(EffectsType[checkedEffect.id]);
+    }
   };
 
   var removeEffect = function (radios) {
@@ -191,14 +195,9 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  effectSetup.addEventListener('change', function (evt) {
-    showScale();
+  effectSetup.addEventListener('change', function () {
     getDefaultScale();
     removeEffect(effectRadios);
-    effects.imgUpload.classList.add(EffectsType[evt.target.id]);
-
-    if (evt.target.id === 'effect-none') {
-      hideScale();
-    }
+    useEffect();
   });
 })();
