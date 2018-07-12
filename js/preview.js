@@ -65,13 +65,11 @@
     var commentCount = document.querySelector('.social__comment-count');
     commentCount.classList.add('visually-hidden');
 
-    commentLoadmore.addEventListener('click', onLoadClick);
+    commentLoadmore.addEventListener('click', function () {
+      commentList.appendChild(loadComments(picture, commentLoadmore));
+    });
 
     document.addEventListener('keydown', onEscPress);
-  };
-
-  var onLoadClick = function () {
-    commentList.appendChild(loadComments(picture, commentLoadmore));
   };
 
   var onEscPress = function (evt) {
